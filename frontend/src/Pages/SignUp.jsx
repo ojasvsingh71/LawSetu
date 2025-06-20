@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 function SignUp() {
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen px-4">
@@ -54,9 +54,7 @@ function SignUp() {
 
           <div className="mt-6 text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-indigo-600 hover:underline">
-              Sign In
-            </a>
+            <Link to="/" className="text-indigo-600 hover:underline">Sign In</Link>
           </div>
         </div>
 
