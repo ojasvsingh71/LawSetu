@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home"; 
+import SignUp from "./SignUp";
+<Pages></Pages>
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
