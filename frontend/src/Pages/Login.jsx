@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,7 +10,7 @@ const Login = ({ setIsAuthenticated }) => {
     e.preventDefault();
     if (email === "start@lawsetu.com" && password === "123456") {
       setIsAuthenticated(true);
-      navigate("/Home");
+      navigate("/home");
     } else {
       alert("Invalid credentials. Please try again.");
     }
@@ -57,9 +57,10 @@ const Login = ({ setIsAuthenticated }) => {
                 <input type="checkbox" className="form-checkbox text-indigo-600" />
                 <span>Remember me</span>
               </label>
-              <a href="#" className="text-indigo-600 hover:underline">
+              <Link to="/forgot-password" className="text-indigo-600 hover:underline">
                 Forgot Password?
-              </a>
+              </Link>
+
             </div>
 
             <button
@@ -82,9 +83,7 @@ const Login = ({ setIsAuthenticated }) => {
 
           <p className="text-sm text-center mt-6 text-gray-600">
             Don’t have an account?{"  "}
-            <a href="#" className="text-indigo-600 font-semibold hover:underline">
-              Sign Up
-            </a>
+            <Link to="/signup" className="text-indigo-600 hover:underline">Sign Up</Link>
           </p>
         </div>
 
