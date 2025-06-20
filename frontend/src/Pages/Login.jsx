@@ -1,25 +1,38 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import axios from "axios"
+
+
+
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === "start@lawsetu.com" && password === "123456") {
+
+    try {
+      const response = await axios.post("http://localhost:1234/auth/login", {
+        email,
+        password
+      })
+      
+      localStorage.setItem("token", response.data.token);
+
       setIsAuthenticated(true);
       navigate("/home");
-    } else {
-      alert("Invalid credentials. Please try again.");
+    } catch (error) {
+      alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
     }
+
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-xl rounded-xl overflow-hidden bg-white">
-        
+
         {/* Left Login Form */}
         <div className="w-full md:w-1/2 p-10">
           <div className="mb-10">
@@ -95,9 +108,9 @@ const Login = ({ setIsAuthenticated }) => {
             className="max-h-80 mb-4 rounded-lg shadow-lg"
           />
           <h2 className="text-2xl font-bold mb-2">Bridge the Gap Between </h2>
-           <h2 className="text-2xl font-bold mb-2">Law and Simplicity</h2>
+          <h2 className="text-2xl font-bold mb-2">Law and Simplicity</h2>
           <p className="text-center text-white/90">
-            Draft smarter contracts, simplify legal terms, and manage documents with AI.  
+            Draft smarter contracts, simplify legal terms, and manage documents with AI.
             <br />Save time. Reduce confusion. LawSetu has your back.
           </p>
         </div>

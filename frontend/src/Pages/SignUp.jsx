@@ -1,6 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+
+
+
 function SignUp() {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  async function handleSignup(e) {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("http://localhost:1234/auth/register", {
+        name,
+        email,
+        password
+      });
+
+      navigate("/");
+    }catch(error){
+      alert(error.response?.data?.message || "SignUP failed!!! Please try again!!!");
+    }
+  }
+
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen px-4">
       <div className="flex flex-col md:flex-row shadow-xl rounded-2xl overflow-hidden max-w-4xl w-full bg-white">
@@ -10,37 +37,37 @@ function SignUp() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Create your LawSetu Account</h1>
           <p className="text-sm text-gray-500 mb-6">Sign up to simplify your legal work using AI</p>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSignup} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-gray-700 font-medium mb-1">Full Name</label>
               <input
-                id="name"
                 type="text"
                 placeholder="John Doe"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div>
               <label htmlFor="email" className="block text-gray-700 font-medium mb-1">Email Address</label>
               <input
-                id="email"
                 type="email"
                 placeholder="you@example.com"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-gray-700 font-medium mb-1">Password</label>
               <input
-                id="password"
                 type="password"
                 placeholder="••••••••"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onClick={(e) => setPassword(e.target.value)}
               />
             </div>
 
