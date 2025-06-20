@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 function ForgotPassword() {
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen px-4">
-      <div className="flex flex-col md:flex-row shadow-[0_8px_10px_-2px_rgba(0,0,0,0.4)] rounded-2xl overflow-hidden max-w-4xl w-full bg-white">
+      <div className="flex flex-col md:flex-row shadow-xl rounded-2xl overflow-hidden max-w-4xl w-full bg-white">
 
         {/* Left Section */}
         <div className="md:w-1/2 w-full p-8 md:p-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">LawSetu</h2>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">LawSetu</h1>
           <p className="text-sm text-gray-500 mb-6">Reset your password to regain access</p>
 
           <form className="space-y-4">

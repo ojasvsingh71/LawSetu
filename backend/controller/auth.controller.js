@@ -2,17 +2,21 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt"
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
 
     const hashedPass = await bcrypt.hash(password, 10);
     const user = userModel.create({
+        name: name,
         email: email,
         password: hashedPass
     })
 
     res.status(200).json({
         message: "Registered User",
-        user
+        user: {
+            name: user.name,
+            email: user.email
+        }
     })
 }
 
@@ -38,6 +42,7 @@ const login = async (req, res) => {
             message: "User found",
             user: {
                 id: user._id,
+                name: user.name,
                 email: user.email
             }
         });
