@@ -1,31 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import axios from "axios"
+import axios from "axios";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
-
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post("http://localhost:1234/auth/login", {
-        email,
-        password
-      })
-      
-      localStorage.setItem("token", response.data.token);
+    // try {
+    //   const response = await axios.post(`${apiUrl}/auth/login`, {
+    //     email,
+    //     password
+    //   })
 
-      setIsAuthenticated(true);
-      navigate("/home");
-    } catch (error) {
-      alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
-    }
+    //   localStorage.setItem("token", response.data.token);
+
+    //   setIsAuthenticated(true);
+    //   navigate("/home");
+    // } catch (error) {
+    //   alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
+    // }
+
+    setIsAuthenticated(true);
+    navigate("/home");
 
   };
 
@@ -56,14 +61,28 @@ const Login = ({ setIsAuthenticated }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Password</label>
-              <input
-                type="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-12"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeIcon className="w-5 h-5" />
+                  ) : (
+                    <EyeSlashIcon className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
+
 
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
