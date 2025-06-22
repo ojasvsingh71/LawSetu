@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/connectdb.js";
 import authRoute from "./routes/auth.route.js"
+import aiRoute from "./routes/ai.route.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors())
 connectDB();
 
 app.use("/auth", authRoute);
+app.use("/ai", aiRoute);
 
 app.get('/', (req, res) => {
     res.send("API is running!!!");
