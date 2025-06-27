@@ -4,6 +4,7 @@ import Login from "./Pages/Login";
 import Home from "./Pages/Home"; 
 import SignUp from "./Pages/SignUp";
 import ForgotPassword from "./Pages/ForgotPassword";
+import DocumentTemplate from "./Pages/DocumentTemplate";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,6 +42,7 @@ function App() {
         }
       />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/editor" element={<DocumentTemplate />} />
     </Routes>
   );
 }
