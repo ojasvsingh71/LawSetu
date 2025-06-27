@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,22 +15,21 @@ const Login = ({ setIsAuthenticated }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // try {
-    //   const response = await axios.post(`${apiUrl}/auth/login`, {
-    //     email,
-    //     password
-    //   })
+    try {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email,
+        password
+      })
 
-    //   localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
 
-    //   setIsAuthenticated(true);
-    //   navigate("/home");
-    // } catch (error) {
-    //   alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
-    // }
+      axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
-    setIsAuthenticated(true);
-    navigate("/home");
+      navigate("/", { replace: true });
+    } catch (error) {
+      alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
+    }
+
 
   };
 

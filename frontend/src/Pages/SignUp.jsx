@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function SignUp() {
 
@@ -16,19 +16,19 @@ function SignUp() {
   async function handleSignup(e) {
     e.preventDefault();
 
-    // try {
-    //   const response = await axios.post(`${apiUrl}/auth/register`, {
-    //     name,
-    //     email,
-    //     password
-    //   });
+    try {
+      const response = await axios.post(`${apiUrl}/auth/register`, {
+        name,
+        email,
+        password
+      });
 
-    //   navigate("/");
-    // } catch (error) {
-    //   alert(error.response?.data?.message || "SignUP failed!!! Please try again!!!");
-    // }
+      navigate("/");
+    } catch (error) {
+      alert(error.response?.data?.message || "SignUP failed!!! Please try again!!!");
+    }
 
-    navigate("/");
+    navigate("/login");
   }
 
   return (
