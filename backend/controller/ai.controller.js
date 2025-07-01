@@ -1,5 +1,6 @@
 import { OpenAI } from 'openai'
 import dotenv from 'dotenv'
+import promptTemplate from './promptTemplate.js';
 
 dotenv.config();
 
@@ -7,7 +8,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const suggestionClause = async (req, res) => {
     try {
-        const { promptTemplate, context } = req.body;
+        const { context } = req.body;
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o-mini',

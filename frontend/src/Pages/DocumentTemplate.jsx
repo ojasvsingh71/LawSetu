@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import html2pdf from "html2pdf.js";
+import axios from "axios";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const DocumentTemplate = () => {
 
@@ -10,7 +13,7 @@ const DocumentTemplate = () => {
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [showAIModal, setShowAIModal] = useState(false);
   const aiInputRef = useRef(null);
-
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -26,6 +29,25 @@ const DocumentTemplate = () => {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [editorText, title]);
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    const context = aiInputRef.current.value.trim();
+    if (context) {
+
+      try {
+        const res = await axios.post(`${apiUrl}/ai/suggest`, { context });
+
+        setEditorText((prev) => `${prev}\n\n${res.data.text}`);
+
+        setSaveStatus("AI-generated content inserted");
+      } catch (error) {
+        alert(error.response?.data?.message || "Generation failed!!! Please try again!!!");
+      }
+      setLoading(false);
+      setShowAIModal(false);
+    }
+  }
 
   const handleExport = () => {
     const opt = {
@@ -214,9 +236,9 @@ const DocumentTemplate = () => {
       </div>
 
       {showAIModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50">
           <div
-            className={`rounded-lg p-6 w-full max-w-md shadow-lg ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
+            className={`border rounded-lg border-indigo-400 p-6 w-full max-w-md shadow-lg ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
           >
             <h3
               className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-indigo-300' : 'text-indigo-700'}`}
@@ -243,19 +265,13 @@ const DocumentTemplate = () => {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  const prompt = aiInputRef.current.value.trim();
-                  if (prompt) {
-                    setEditorText(
-                      `AI-generated document based on your request:\n"${prompt}"\n\n[Insert legal clauses here...]`
-                    );
-                    setShowAIModal(false);
-                    setSaveStatus("AI-generated content inserted");
-                  }
-                }}
+                onClick={handleGenerate}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
               >
-                Generate
+                {
+                  !loading ? "Generate" : "Generating..."
+                }
+                
               </button>
             </div>
           </div>
