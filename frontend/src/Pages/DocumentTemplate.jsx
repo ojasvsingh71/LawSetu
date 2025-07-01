@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import html2pdf from "html2pdf.js";
-import axios from "axios";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import { Logout } from "../components/Logout";
+// import api from "../api/axios";
 
 const DocumentTemplate = () => {
 
@@ -36,9 +35,9 @@ const DocumentTemplate = () => {
     if (context) {
 
       try {
-        const res = await axios.post(`${apiUrl}/ai/suggest`, { context });
+        // const res = await api.post(`/ai/suggest`, { context });
 
-        setEditorText((prev) => `${prev}\n\n${res.data.text}`);
+        // setEditorText((prev) => `${prev}\n\n${res.data.text}`);
 
         setSaveStatus("AI-generated content inserted");
       } catch (error) {
@@ -89,8 +88,8 @@ const DocumentTemplate = () => {
             Dashboard
           </a>
           <a
-            href="#"
             className={`${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'} hover:underline`}
+            onClick={Logout}
           >
             Logout
           </a>

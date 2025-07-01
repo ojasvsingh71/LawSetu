@@ -60,7 +60,7 @@ const login = async (req, res) => {
             })
         }
 
-        const { email, password } = req.body;
+        const { email, password, remember } = req.body;
 
         const user = await userModel.findOne({ email });
 
@@ -81,9 +81,15 @@ const login = async (req, res) => {
             const token = jwt.sign(
                 { id: user._id, email: user.email },
                 process.env.JWT_SECRET,
-                { expiresIn: "5h" }
+                { expiresIn: remember ? "7d" : "5h" }
             )
 
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false,
+                samSite: "Strict",
+                maxAge: remember ? 7 * 24 * 60 * 60 * 1000 : undefined
+            });
 
             res.status(200).json({
                 message: "User found",

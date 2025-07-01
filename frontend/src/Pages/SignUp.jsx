@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-
-const apiUrl = import.meta.env.VITE_API_URL;
+// import api from "../api/axios";
 
 function SignUp() {
 
@@ -17,18 +15,18 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${apiUrl}/auth/register`, {
-        name,
-        email,
-        password
-      });
+      // const response = await api.post(`/auth/register`, {
+      //   name,
+      //   email,
+      //   password
+      // });
 
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || "SignUP failed!!! Please try again!!!");
     }
 
-    navigate("/login");
+    // navigate("/login");
   }
 
   return (

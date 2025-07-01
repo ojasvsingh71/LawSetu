@@ -3,27 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+// import api from "../api/axios";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+// console.log(api)
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [remember, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${apiUrl}/auth/login`, {
-        email,
-        password
-      })
+      // const response = await api.post(`/auth/login`, {
+      //   email,
+      //   password,
+      //   remember
+      // }, { withCredentials: true }
+      // )
 
-      localStorage.setItem("token", response.data.token);
+      // localStorage.setItem("token", response.data.token);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
       navigate("/", { replace: true });
     } catch (error) {
@@ -85,7 +89,7 @@ const Login = () => {
 
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
-                <input type="checkbox" className="form-checkbox text-indigo-600" />
+                <input type="checkbox" className="form-checkbox text-indigo-600" checked={remember} onChange={() => setRememberMe((prev) => !prev)} />
                 <span>Remember me</span>
               </label>
               <Link to="/forgot-password" className="text-indigo-600 hover:underline">
