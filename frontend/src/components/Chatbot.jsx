@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api/axios";
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
@@ -7,7 +8,7 @@ const Chatbot = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const LawBot_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+  // const LawBot_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
   const sendMessage = async () => {
     if (!input || loading) return;
@@ -18,24 +19,18 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions ", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${LawBot_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [...messages, userMsg],
-        }),
+      const res = await api.post("/ai/chat", {
+        messages: [
+          ...messages.map(msg => ({
+            role: msg === "user" ? "user" : "assistant",
+            content: msg.content || msg.text
+          })),
+          { role: "user", content: input }
+        ]
       });
 
-      const data = await res.json();
-      const botMsg = {
-        role: "assistant",
-        content: data.choices?.[0]?.message?.content || "No reply",
-      };
-      setMessages((prev) => [...prev, botMsg]);
+      const botmessage = { role: "assistant", text: res.data.reply };
+      setMessages(prev => [...prev, botmessage]);
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -76,11 +71,10 @@ const Chatbot = () => {
                 {messages.map((msg, i) => (
                   <div
                     key={i}
-                    className={`p-2 my-1 rounded max-w-[70%] ${
-                      msg.role === "user" ? "ml-auto bg-blue-100" : "mr-auto bg-gray-200"
-                    }`}
+                    className={`p-2 my-1 rounded max-w-[70%] ${msg.role === "user" ? "ml-auto bg-blue-100" : "mr-auto bg-gray-200"
+                      }`}
                   >
-                    {msg.content}
+                    {msg.content || msg.text}
                   </div>
                 ))}
                 {loading && <div className="p-2 bg-gray-200 rounded mr-auto">Typing...</div>}
