@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import html2pdf from "html2pdf.js";
 import { Logout } from "../components/Logout";
-// import api from "../api/axios";
+import api from "../api/axios";
 
 const DocumentTemplate = () => {
 
@@ -35,9 +35,9 @@ const DocumentTemplate = () => {
     if (context) {
 
       try {
-        // const res = await api.post(`/ai/suggest`, { context });
+        const res = await api.post(`/ai/suggest`, { context });
 
-        // setEditorText((prev) => `${prev}\n\n${res.data.text}`);
+        setEditorText((prev) => `${prev}\n\n${res.data.text}`);
 
         setSaveStatus("AI-generated content inserted");
       } catch (error) {

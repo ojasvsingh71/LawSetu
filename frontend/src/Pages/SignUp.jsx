@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-// import api from "../api/axios";
+import api from "../api/axios";
 
 function SignUp() {
 
@@ -15,11 +15,11 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      // const response = await api.post(`/auth/register`, {
-      //   name,
-      //   email,
-      //   password
-      // });
+      const response = await api.post(`/auth/register`, {
+        name,
+        email,
+        password
+      });
 
       navigate("/login");
     } catch (error) {

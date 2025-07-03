@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-// import api from "../api/axios";
+import api from "../api/axios";
 
-// console.log(api)
+console.log(api)
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,16 +18,16 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // const response = await api.post(`/auth/login`, {
-      //   email,
-      //   password,
-      //   remember
-      // }, { withCredentials: true }
-      // )
+      const response = await api.post(`/auth/login`, {
+        email,
+        password,
+        remember
+      }, { withCredentials: true }
+      )
 
-      // localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
 
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
       navigate("/", { replace: true });
     } catch (error) {
