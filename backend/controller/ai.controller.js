@@ -14,7 +14,7 @@ const suggestionClause = async (req, res) => {
     try {
         const { context } = req.body;
 
-        await documentModel.create({ prompt: req.body });
+        await documentModel.create({ prompt: context });
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
