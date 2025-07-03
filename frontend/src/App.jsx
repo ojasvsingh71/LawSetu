@@ -7,6 +7,7 @@ import SignUp from "./Pages/SignUp";
 import ForgotPassword from "./Pages/ForgotPassword";
 import DocumentTemplate from "./Pages/DocumentTemplate";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   const token = localStorage.getItem('token');
@@ -16,6 +17,7 @@ function App() {
   }
 
   return (
+    <>
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
@@ -24,6 +26,10 @@ function App() {
       <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
       <Route path="/editor" element={<ProtectedRoute><DocumentTemplate /></ProtectedRoute>} />
     </Routes>
+    <Chatbot/>
+
+</>
+
   );
 }
 
