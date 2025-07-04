@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import html2pdf from "html2pdf.js";
 import { Logout } from "../components/Logout";
 import api from "../api/axios";
+import Tesseract from 'tesseract.js';
 
 const DocumentTemplate = () => {
 
@@ -13,6 +14,8 @@ const DocumentTemplate = () => {
   const [showAIModal, setShowAIModal] = useState(false);
   const aiInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
 
 
   useEffect(() => {
@@ -160,6 +163,16 @@ const DocumentTemplate = () => {
             >
               + Add Confidentiality Clause
             </button>
+            <button
+  onClick={() => setShowUploadModal(true)}
+  className={`px-3 py-1 rounded ${isDarkMode
+    ? 'bg-indigo-900 text-indigo-200 hover:bg-indigo-800'
+    : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200'
+  }`}
+>
+  📤 Upload Your Template
+</button>
+
           </div>
         </aside>
 
@@ -276,6 +289,116 @@ const DocumentTemplate = () => {
           </div>
         </div>
       )}
+      {showUploadModal && (
+  <div
+  className="fixed inset-0 z-50 flex items-center justify-center bg-white/10"
+  style={{ backdropFilter: 'blur(2px)' }}
+>
+
+    <div
+      className={`p-6 rounded-lg shadow-xl w-96 transition-all duration-300 ${
+        isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
+      }`}
+    >
+      <h3 className="text-lg font-bold mb-4 text-center">Upload Your Template</h3>
+
+      {/* Upload Image */}
+      <input
+  type="file"
+  id="image-upload"
+  accept="image/*"
+  style={{ display: 'none' }}
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const imageData = event.target.result;
+      setSaveStatus("Extracting text from image...");
+
+      try {
+        const result = await Tesseract.recognize(imageData, 'eng', {
+          logger: m => console.log(m) // Optional: logs progress
+        });
+
+        const extractedText = result.data.text;
+        setEditorText((prev) => prev + `\n\n${extractedText}`);
+        setSaveStatus("Text extracted from image and inserted");
+        setShowUploadModal(false);
+      } catch (err) {
+        console.error("OCR failed:", err);
+        alert("Failed to extract text from image.");
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }}
+/>
+      <button
+  onClick={() => document.getElementById('image-upload').click()}
+  className={`w-full mb-3 py-2 rounded ${
+    isDarkMode
+      ? 'bg-indigo-700 hover:bg-indigo-600'
+      : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200'
+  }`}
+>
+  📸 Upload Image
+</button>
+
+
+      {/* Upload Text File */}
+      <input
+  type="file"
+  id="text-upload"
+  accept=".txt"
+  style={{ display: 'none' }}
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.name.endsWith('.txt')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target.result;
+        setEditorText((prev) => prev + `\n\n${content}`);
+        setSaveStatus(`Text from "${file.name}" uploaded`);
+        setShowUploadModal(false);
+      };
+      reader.readAsText(file);
+    } else {
+      alert("Only .txt files are supported.");
+    }
+  }}
+/>
+
+      <button
+  onClick={() => document.getElementById('text-upload').click()}
+  className={`w-full mb-3 py-2 rounded ${
+    isDarkMode
+      ? 'bg-indigo-700 hover:bg-indigo-600'
+      : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200'
+  }`}
+>
+  📄 Upload Text File
+</button>
+
+
+      {/* Cancel Button */}
+      <button
+        onClick={() => setShowUploadModal(false)}
+        className={`w-full py-2 rounded ${
+          isDarkMode
+            ? 'bg-gray-700 hover:bg-gray-600'
+            : 'bg-gray-200 hover:bg-gray-300'
+        }`}
+      >
+        ❌ Cancel
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   )
 };
