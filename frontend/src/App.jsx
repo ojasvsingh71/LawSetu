@@ -8,6 +8,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import DocumentTemplate from "./Pages/DocumentTemplate";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import Chatbot from "./components/Chatbot";
+import GoogleCallback from "./Pages/GoogleCallback";
 
 function App() {
   const token = localStorage.getItem('token');
@@ -18,17 +19,18 @@ function App() {
 
   return (
     <>
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/google/callback" element={<GoogleCallback />} />
 
-      <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-      <Route path="/editor" element={<ProtectedRoute><DocumentTemplate /></ProtectedRoute>} />
-    </Routes>
-    <Chatbot/>
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/editor" element={<ProtectedRoute><DocumentTemplate /></ProtectedRoute>} />
+      </Routes>
+      <Chatbot />
 
-</>
+    </>
 
   );
 }
