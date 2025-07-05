@@ -6,7 +6,7 @@ import authRoute from "./routes/auth.route.js"
 import aiRoute from "./routes/ai.route.js"
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
-import passport from "./config/passport.js"; // 👈 this runs the Google strategy setup
+import passport from "./config/passport.js";
 import googleAuth from "./routes/google.auth.js"
 
 const app = express();
