@@ -8,6 +8,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import DocumentTemplate from "./Pages/DocumentTemplate";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import Chatbot from "./components/Chatbot";
+import Contact from "./Pages/Contact";
 
 function App() {
   const token = localStorage.getItem('token');
@@ -25,6 +26,7 @@ function App() {
 
       <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
       <Route path="/editor" element={<ProtectedRoute><DocumentTemplate /></ProtectedRoute>} />
+      <Route path="/contact" element={<Contact />} />
     </Routes>
     <Chatbot/>
 

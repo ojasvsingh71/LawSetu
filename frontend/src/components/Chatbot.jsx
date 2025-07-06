@@ -44,7 +44,7 @@ const Chatbot = () => {
   return (
     <>
       {!open && (
-        <div className="fixed bottom-5 right-5 flex flex-col items-center z-50">
+        <div className="fixed bottom-5 right-5 flex flex-col items-center z-[9999] ">
           <button
             onClick={() => setOpen(true)}
             className="bg-blue-600 text-white p-2 rounded-full"
@@ -56,7 +56,7 @@ const Chatbot = () => {
       )}
 
       {open && (
-        <div className={`fixed bottom-5 right-5 w-80 ${minimized ? "h-16" : "h-[70vh]"} bg-white rounded shadow-lg flex flex-col`}>
+        <div className={`fixed bottom-5 right-5 w-80 ${minimized ? "h-16" : "h-[70vh]"} bg-white rounded shadow-lg flex flex-col z-[9999]`}>
           <div className="bg-blue-600 text-white p-2 flex justify-between text-sm">
             <span>LawBot</span>
             <div>
