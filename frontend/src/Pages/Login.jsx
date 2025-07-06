@@ -5,7 +5,7 @@ import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import api from "../api/axios";
 
-console.log(api)
+const baseurl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -110,6 +110,7 @@ const Login = () => {
 
           <button
             type="button"
+            onClick={() => window.location.href = `${baseurl}/auth/google`}
             className="w-full mt-4 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
