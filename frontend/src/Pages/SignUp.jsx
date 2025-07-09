@@ -9,10 +9,12 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSignup(e) {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await api.post(`/auth/register`, {
@@ -24,6 +26,8 @@ function SignUp() {
       navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || "SignUP failed!!! Please try again!!!");
+    } finally {
+      setLoading(false);
     }
 
     // navigate("/login");
@@ -88,9 +92,9 @@ function SignUp() {
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+              className={`w-full ${loading ? "bg-indigo-400" : "bg-indigo-600"} text-white py-2 rounded-md hover:bg-indigo-700 transition`}
             >
-              Create Account
+              {loading ? "Creating..." : "Create Account"}
             </button>
           </form>
 

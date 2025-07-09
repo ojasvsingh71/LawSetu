@@ -12,10 +12,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await api.post(`/auth/login`, {
@@ -32,6 +34,8 @@ const Login = () => {
       navigate("/", { replace: true });
     } catch (error) {
       alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
+    } finally {
+      setLoading(false);
     }
 
 
@@ -100,9 +104,9 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition"
+              className={`w-full py-3  ${loading ? "bg-indigo-400" : "bg-indigo-600"} text-white font-semibold rounded-md hover:bg-indigo-700 transition`}
             >
-              Sign In
+              {loading ? " Signing In..." : "Sign In"}
             </button>
 
             <div className="text-center text-gray-500 font-semibold">OR</div>

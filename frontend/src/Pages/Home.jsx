@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import React, { useRef,} from "react";
+import React, { useRef, } from "react";
 import heroImage from "./assets/hero.jpeg";
 import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Logout } from "../components/Logout";
 
 const Home = () => {
   const menuRef = useRef(null);
@@ -82,7 +83,7 @@ const Home = () => {
         }
         `}
       </style>
-      
+
 
       <div className="bg-white text-gray-800">
         {/* Navbar */}
@@ -106,8 +107,8 @@ const Home = () => {
               </Link>
             </div>
             <div className="hidden md:block">
-              <Link to="/login" className="bg-indigo-600 text-white px-5 py-2 rounded-xl shadow hover:bg-indigo-500 transition duration-300">
-                Sign In
+              <Link onClick={Logout} className="bg-indigo-600 text-white px-5 py-2 rounded-xl shadow hover:bg-indigo-500 transition duration-300">
+                Logout
               </Link>
             </div>
             <div className="md:hidden relative">
@@ -122,8 +123,8 @@ const Home = () => {
                 <Link to="/contact" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">
                   Contact
                 </Link>
-                <Link to="/login" className="block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-center">
-                  Sign In
+                <Link onClick={Logout} className="block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-center">
+                  Logout
                 </Link>
               </div>
             </div>
@@ -135,7 +136,7 @@ const Home = () => {
           {/* Top SVG Wave */}
           <div className="absolute top-0 left-0 w-full z-0">
             <svg viewBox="0 0 1440 320" className="w-full h-40 text-indigo-100">
-              <path fill="currentColor" fillOpacity="1" d="M0,64L60,85.3C120,107,240,149,360,149.3C480,149,600,107,720,106.7C840,107,960,149,1080,154.7C1200,160,1320,128,1380,112L1440,96L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"/>
+              <path fill="currentColor" fillOpacity="1" d="M0,64L60,85.3C120,107,240,149,360,149.3C480,149,600,107,720,106.7C840,107,960,149,1080,154.7C1200,160,1320,128,1380,112L1440,96L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z" />
             </svg>
           </div>
           {/* Content */}
@@ -143,7 +144,7 @@ const Home = () => {
             {/* Text Column */}
             <div className="text-center md:text-left max-w-xl space-y-6">
               <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">Draft Legal<br />Documents <span className="text-indigo-600">Smarter</span><br />
-              with{" "}<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-400 to-indigo-600 animate-pulse">AI</span>
+                with{" "}<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-400 to-indigo-600 animate-pulse">AI</span>
               </h1>
               <p className="text-lg text-gray-600">LawSetu helps you draft contracts, agreements & simplify legal work with AI.</p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
@@ -157,14 +158,14 @@ const Home = () => {
             </div>
             {/* Image Column */}
             <div className=" backdrop-blur-md bg-white/50 rounded-3xl shadow-2xl p-4 md:p-6 w-[22rem] md:w-[30rem]">
-              <img src={heroImage} alt="AI Legal Assistant" className="rounded-2xl object-contain w-full h-auto"/>
+              <img src={heroImage} alt="AI Legal Assistant" className="rounded-2xl object-contain w-full h-auto" />
             </div>
           </div>
           {/* Bottom SVG Wave */}
           <div className="absolute bottom-0 left-0 w-full z-0 rotate-180 ">
             <svg viewBox="0 0 1440 320" className="w-full h-40 animate-[waveTint_6s_ease-in-out_infinite]"
-            style={{ color: "#c7d2fe" }}>
-              <path fill="currentColor" fillOpacity="1" d="M0,64L60,85.3C120,107,240,149,360,149.3C480,149,600,107,720,106.7C840,107,960,149,1080,154.7C1200,160,1320,128,1380,112L1440,96L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"/>
+              style={{ color: "#c7d2fe" }}>
+              <path fill="currentColor" fillOpacity="1" d="M0,64L60,85.3C120,107,240,149,360,149.3C480,149,600,107,720,106.7C840,107,960,149,1080,154.7C1200,160,1320,128,1380,112L1440,96L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z" />
             </svg>
           </div>
         </section>
