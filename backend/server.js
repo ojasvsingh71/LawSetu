@@ -13,11 +13,22 @@ const app = express();
 
 dotenv.config()
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://law-setu.vercel.app"
+];
+
 app.use(express.json())
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-}))
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 app.use(cookieParser())
 app.use(expressSession({ secret: "lawsetu_secret", resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
