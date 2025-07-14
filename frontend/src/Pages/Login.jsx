@@ -118,7 +118,7 @@ const Login = () => {
             className="w-full mt-4 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-            🚀 Continue with Google
+             Continue with Google
           </button>
 
           <p className="text-sm text-center mt-6 text-gray-600">
