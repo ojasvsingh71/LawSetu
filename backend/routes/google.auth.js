@@ -9,18 +9,19 @@ router.get("/auth/google",
 );
 
 router.get("/auth/google/callback",
-  passport.authenticate("google"), 
+  passport.authenticate("google"),
 
-    async(req,res)=>{
-      const user=req.user;
+  async (req, res) => {
+    const user = req.user;
 
-      const token=jwt.sign(
-        {id:user._id,email:user.email},
-        process.env.JWT_SECRET,
-        {expiresIn:"7d"}
-      )
-        res.redirect(`http://localhost:5173/google/callback?token=${token}`);
-    }
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    res.redirect(`https://law-setu.vercel.app/google/callback?token=${token}`);
+  }
 );
 
 export default router;
