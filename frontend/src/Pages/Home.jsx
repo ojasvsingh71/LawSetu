@@ -81,6 +81,15 @@ const Home = () => {
             color: #a5b4fc;
           }
         }
+        @keyframes ringPulse {
+          0% { transform: scale(1); opacity: 0.6; }
+          50% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1); opacity: 0.6; }
+        }
+        
+        .phone-ring {
+          animation: ringPulse 1.5s ease-in-out infinite;
+        }
         `}
       </style>
 
