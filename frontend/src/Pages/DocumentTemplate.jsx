@@ -3,8 +3,22 @@ import html2pdf from "html2pdf.js";
 import { Logout } from "../components/Logout";
 import api from "../api/axios";
 import Tesseract from 'tesseract.js';
+import { Link } from "react-router-dom";
 
 const DocumentTemplate = () => {
+  const menuRef = useRef(null);
+
+  const toggleMenu = () => {
+    const menu = menuRef.current;
+    if (menu) {
+      menu.classList.toggle("opacity-0");
+      menu.classList.toggle("scale-95");
+      menu.classList.toggle("pointer-events-none");
+      menu.classList.toggle("opacity-100");
+      menu.classList.toggle("scale-100");
+      menu.classList.toggle("pointer-events-auto");
+    }
+  };
 
   const [isDarkMode, setIsDarkMode] = useState("dark");
 
@@ -79,29 +93,46 @@ const DocumentTemplate = () => {
     <div
       className={`min-h-screen bg-gradient-to-b transition-all duration-300 ${isDarkMode ? 'from-gray-900 to-black text-white' : 'from-white to-indigo-600 text-gray-800'}`}
     >
-      <header
-        className={`shadow-md py-4 px-6 flex justify-between items-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
-      >
-        <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'}`}>
-          LawSetu
-        </h1>
-        <div className="flex items-center gap-4">
-          <a
-            href="/"
-            className={`${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'} hover:underline`}
-          >
-            Dashboard
-          </a>
-          <a
-            className={`${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'} hover:underline`}
-            onClick={Logout}
-          >
-            Logout
-          </a>
+      <nav className={`shadow-md fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-500 text-transparent bg-clip-text">LawSetu</div>
+          <div className="hidden md:flex space-x-8 text-lg font-medium">
+            <Link to="/" className={`relative group ${isDarkMode ? 'text-indigo-200' : 'text-gray-700'}`}>Home
+            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+            </Link>
+            <Link to="/editor" className={`relative group ${isDarkMode ? 'text-indigo-200' : 'text-gray-700'}`}>Templates
+            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+            </Link>
+            <Link to="/contact" className={`relative group ${isDarkMode ? 'text-indigo-200' : 'text-gray-700'}`}>Contact
+            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+            </Link>
+          </div>
+          <div className="hidden md:flex items-center gap-4">
+            <Link onClick={Logout} className="bg-indigo-600 text-white px-5 py-2 rounded-xl shadow hover:bg-indigo-500 transition duration-300">Logout</Link>
+          </div>
+          <div className="md:hidden relative">
+            <button onClick={toggleMenu} className={`text-3xl ${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'} focus:outline-none`}>☰</button>
+            <div ref={menuRef} className={`absolute right-0 mt-3 w-48 rounded-xl shadow-xl overflow-hidden transition-all duration-300 z-50 border ${
+              isDarkMode? 'bg-gray-800 text-white border-gray-600': 'bg-white text-gray-800 border-gray-200'} opacity-0 scale-95 pointer-events-none`}>
+                <Link to="/" className="block px-4 py-2 hover:bg-indigo-500 hover:text-white">
+                  Home
+                </Link>
+                <Link to="/editor" className="block px-4 py-2 hover:bg-indigo-500 hover:text-white">
+                  Templates
+                </Link>
+                <Link to="/contact" className="block px-4 py-2 hover:bg-indigo-500 hover:text-white">
+                  Contact
+                </Link>
+                <Link onClick={Logout} className="block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-center">
+                  Logout
+                </Link>
+            </div>
+          </div>
         </div>
-      </header>
+      </nav>
 
-      <div className="flex flex-col md:flex-row p-6 gap-6">
+
+      <div className="pt-20 flex flex-col md:flex-row p-6 gap-6">
         <aside
           className={`md:w-1/4 rounded-lg shadow p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
         >
