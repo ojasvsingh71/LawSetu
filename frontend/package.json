@@ -15,6 +15,7 @@
     "axios": "^1.10.0",
     "html2pdf.js": "^0.10.3",
     "lucide-react": "^0.525.0",
+    "pdfjs-dist": "^5.3.93",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
