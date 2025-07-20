@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { z } from "zod"
 import { registerSchema, loginSchema } from "../models/zod.schemas.js"
+import sendMail from "../utils/sendMails.js";
 
 const register = async (req, res) => {
 
@@ -108,4 +109,30 @@ const login = async (req, res) => {
     }
 }
 
-export default { register, login };
+const reset_pass = async (req, res) => {
+
+    try {
+        const { email, newPassword } = req.body;
+
+        if (!email || !newPassword) {
+            return res.status(400).json({ message: "Email and new password are required" });
+        }
+
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const hashedPass = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPass;
+        await user.save();
+
+        res.status(200).json({ message: "Password has been reset successfully " });
+    } catch (error) {
+        console.error("Reset error:", error);
+        res.status(500).json({ message: "Server error. Try again later." });
+    }
+
+}
+
+export default { register, login, reset_pass };
