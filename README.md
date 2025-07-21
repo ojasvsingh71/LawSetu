@@ -5,6 +5,10 @@ LawSetu is a full-stack AI-driven web application that simplifies legal document
 
 ---
 
+<img width="1900" height="867" alt="Screenshot 2025-07-21 203810" src="https://github.com/user-attachments/assets/6d62442d-9c04-41c8-9b6b-441c553cb98e" />
+
+---
+
 ## 🔍 Features
 
 - ✅ **User Authentication** (Google OAuth + JWT)
