@@ -6,6 +6,10 @@ import Tesseract from "tesseract.js";
 import { Link } from "react-router-dom";
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
 GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.mjs', import.meta.url).toString();
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+import { marked } from "marked"
 
 const DocumentTemplate = () => {
   const menuRef = useRef(null);
@@ -61,7 +65,7 @@ const DocumentTemplate = () => {
       } catch (error) {
         alert(
           error.response?.data?.message ||
-            "Generation failed!!! Please try again!!!"
+          "Generation failed!!! Please try again!!!"
         );
       }
       setLoading(false);
@@ -70,16 +74,82 @@ const DocumentTemplate = () => {
   };
 
   const handleExport = () => {
-    const opt = {
-      margin: 0.5,
-      filename: `${title || "LawSetu_Document"}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-    const tempElement = document.createElement("div");
-    tempElement.innerHTML = `<h2>${title}</h2><pre style="font-family:sans-serif;white-space:pre-wrap;">${editorText}</pre>`;
-    html2pdf().from(tempElement).set(opt).save();
+    const html = marked(editorText);
+
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `
+  <html>
+    <head>
+      <style>
+  .markdown {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    padding: 3rem;
+    font-size: 16px;
+  }
+
+  .markdown h1, .markdown h2, .markdown h3 {
+    font-weight: 700;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    page-break-after: avoid;
+  }
+
+  .markdown p, .markdown ul, .markdown ol, .markdown blockquote, .markdown pre {
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  .markdown li {
+    page-break-inside: avoid;
+  }
+
+  .markdown pre, .markdown blockquote {
+    background-color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .markdown code {
+    background-color: #f3f4f6;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.95rem;
+  }
+
+  .markdown blockquote {
+    border-left: 4px solid #cbd5e0;
+    padding-left: 1rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  /* Optional: Add spacing between logical sections */
+  .markdown > * + * {
+    margin-top: 1rem;
+  }
+</style>
+
+    </head>
+    <body>
+      <div class="markdown">
+      <h1>${title}</h1>
+        ${html}
+      </div>
+    </body>
+  </html>
+`;
+
+    html2pdf()
+      .set({
+        margin: 0,
+        filename: `${title || "document"}.pdf`,
+        html2canvas: { scale: 2 },
+      })
+      .from(wrapper)
+      .save();
   };
 
   const templates = {
@@ -93,16 +163,14 @@ const DocumentTemplate = () => {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-b transition-all duration-300 ${
-        isDarkMode
-          ? "from-gray-900 to-black text-white"
-          : "from-white to-indigo-600 text-gray-800"
-      }`}
+      className={`min-h-screen bg-gradient-to-b transition-all duration-300 ${isDarkMode
+        ? "from-gray-900 to-black text-white"
+        : "from-white to-indigo-600 text-gray-800"
+        }`}
     >
       <nav
-        className={`shadow-md fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${
-          isDarkMode ? "bg-gray-900" : "bg-white"
-        }`}
+        className={`shadow-md fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${isDarkMode ? "bg-gray-900" : "bg-white"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-500 text-transparent bg-clip-text">
@@ -111,27 +179,24 @@ const DocumentTemplate = () => {
           <div className="hidden md:flex space-x-8 text-lg font-medium">
             <Link
               to="/"
-              className={`relative group ${
-                isDarkMode ? "text-indigo-200" : "text-gray-700"
-              }`}
+              className={`relative group ${isDarkMode ? "text-indigo-200" : "text-gray-700"
+                }`}
             >
               Home
               <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
             </Link>
             <Link
               to="/editor"
-              className={`relative group ${
-                isDarkMode ? "text-indigo-200" : "text-gray-700"
-              }`}
+              className={`relative group ${isDarkMode ? "text-indigo-200" : "text-gray-700"
+                }`}
             >
               Templates
               <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
             </Link>
             <Link
               to="/contact"
-              className={`relative group ${
-                isDarkMode ? "text-indigo-200" : "text-gray-700"
-              }`}
+              className={`relative group ${isDarkMode ? "text-indigo-200" : "text-gray-700"
+                }`}
             >
               Contact
               <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
@@ -148,19 +213,17 @@ const DocumentTemplate = () => {
           <div className="md:hidden relative">
             <button
               onClick={toggleMenu}
-              className={`text-3xl ${
-                isDarkMode ? "text-indigo-300" : "text-indigo-600"
-              } focus:outline-none`}
+              className={`text-3xl ${isDarkMode ? "text-indigo-300" : "text-indigo-600"
+                } focus:outline-none`}
             >
               ☰
             </button>
             <div
               ref={menuRef}
-              className={`absolute right-0 mt-3 w-48 rounded-xl shadow-xl overflow-hidden transition-all duration-300 z-50 border ${
-                isDarkMode
-                  ? "bg-gray-800 text-white border-gray-600"
-                  : "bg-white text-gray-800 border-gray-200"
-              } opacity-0 scale-95 pointer-events-none`}
+              className={`absolute right-0 mt-3 w-48 rounded-xl shadow-xl overflow-hidden transition-all duration-300 z-50 border ${isDarkMode
+                ? "bg-gray-800 text-white border-gray-600"
+                : "bg-white text-gray-800 border-gray-200"
+                } opacity-0 scale-95 pointer-events-none`}
             >
               <Link
                 to="/"
@@ -193,19 +256,17 @@ const DocumentTemplate = () => {
 
       <div className="pt-20 flex flex-col md:flex-row p-6 gap-6">
         <aside
-          className={`md:w-1/4 rounded-lg shadow p-4 ${
-            isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-          }`}
+          className={`md:w-1/4 rounded-lg shadow p-4 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+            }`}
         >
           <h2 className="text-lg font-semibold mb-4">Templates</h2>
           <input
             type="text"
             placeholder="Search templates..."
-            className={`border rounded w-full px-3 py-2 mb-3 ${
-              isDarkMode
-                ? "bg-gray-700 text-white border-gray-600"
-                : "bg-white text-black border-gray-300"
-            }`}
+            className={`border rounded w-full px-3 py-2 mb-3 ${isDarkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-black border-gray-300"
+              }`}
           />
           <ul className="space-y-2">
             {Object.keys(templates).map((template) => (
@@ -218,9 +279,8 @@ const DocumentTemplate = () => {
                     setEditorText(templates[template]);
                     setSaveStatus(`\"${template}\" template loaded`);
                   }}
-                  className={`block px-3 py-2 rounded hover:bg-indigo-100 ${
-                    isDarkMode ? "text-white hover:bg-indigo-800" : "text-black"
-                  }`}
+                  className={`block px-3 py-2 rounded hover:bg-indigo-100 ${isDarkMode ? "text-white hover:bg-indigo-800" : "text-black"
+                    }`}
                 >
                   {template}
                 </a>
@@ -240,11 +300,10 @@ const DocumentTemplate = () => {
             </button>
             <button
               onClick={() => setShowAIModal(true)}
-              className={`py-2 rounded ${
-                isDarkMode
-                  ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
-                  : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
-              }`}
+              className={`py-2 rounded ${isDarkMode
+                ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
+                : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                }`}
             >
               🤖 Generate with AI
             </button>
@@ -254,21 +313,19 @@ const DocumentTemplate = () => {
                 setEditorText((prev) => prev + clause);
                 setSaveStatus("Confidentiality clause added");
               }}
-              className={`px-3 py-1 rounded ${
-                isDarkMode
-                  ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
-                  : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-              }`}
+              className={`px-3 py-1 rounded ${isDarkMode
+                ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                }`}
             >
               + Add Confidentiality Clause
             </button>
             <button
               onClick={() => setShowUploadModal(true)}
-              className={`px-3 py-1 rounded ${
-                isDarkMode
-                  ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
-                  : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-              }`}
+              className={`px-3 py-1 rounded ${isDarkMode
+                ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                }`}
             >
               📤 Upload Your Template
             </button>
@@ -276,21 +333,18 @@ const DocumentTemplate = () => {
         </aside>
 
         <main
-          className={`flex-1 p-6 rounded-lg shadow ${
-            isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-          }`}
+          className={`flex-1 p-6 rounded-lg shadow ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+            }`}
         >
           <div className="flex justify-end mb-4">
             <div
               onClick={() => setIsDarkMode((prev) => !prev)}
-              className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${
-                isDarkMode ? "bg-indigo-600" : "bg-gray-300"
-              }`}
+              className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${isDarkMode ? "bg-indigo-600" : "bg-gray-300"
+                }`}
             >
               <div
-                className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                  isDarkMode ? "translate-x-7" : ""
-                }`}
+                className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isDarkMode ? "translate-x-7" : ""
+                  }`}
               ></div>
             </div>
           </div>
@@ -303,40 +357,54 @@ const DocumentTemplate = () => {
               setSaveStatus("Saving...");
             }}
             placeholder="Document Title"
-            className={`border px-3 py-2 rounded w-full mb-4 ${
-              isDarkMode
-                ? "bg-gray-700 text-white border-gray-600"
-                : "bg-white text-black border-gray-300"
-            }`}
+            className={`border px-3 py-2 rounded w-full mb-4 ${isDarkMode
+              ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-black border-gray-300"
+              }`}
           />
 
           <h2
-            className={`text-xl font-bold mb-4 ${
-              isDarkMode ? "text-indigo-400" : "text-indigo-600"
-            }`}
+            className={`text-xl font-bold mb-4 ${isDarkMode ? "text-indigo-400" : "text-indigo-600"
+              }`}
           >
             Document Editor
           </h2>
 
-          <textarea
-            className={`w-full h-96 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 ${
-              isDarkMode
+          <div
+            className={`w-full h-96 overflow-y-auto p-4 rounded-lg border ${isDarkMode
+              ? "bg-gray-900 text-white border-gray-600"
+              : "bg-gray-50 text-black border-gray-300"
+              }`}
+          >
+            <textarea
+              className={`w-full h-96 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 ${isDarkMode
                 ? "bg-gray-800 text-white border-gray-600"
                 : "bg-white text-black border-gray-300"
-            }`}
-            value={editorText}
-            onChange={(e) => {
-              setEditorText(e.target.value);
-              setSaveStatus("Saving...");
-            }}
-            placeholder="Start drafting your legal document here..."
-          />
+                }`}
+              value={editorText}
+              onChange={(e) => {
+                setEditorText(e.target.value);
+                setSaveStatus("Saving...");
+              }}
+              placeholder="Start drafting your legal document here..."
+            />
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Live Markdown Preview</h3>
+              <div className={`w-full max-h-[400px] overflow-y-auto p-4 rounded-lg border ${isDarkMode ? "bg-gray-900 text-white border-gray-600" : "bg-gray-50 text-black border-gray-300"}`}>
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                    {editorText.trim()}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            </div>
+
+          </div>
 
           <div className="mt-2 flex justify-between items-center">
             <span
-              className={`text-sm ${
-                isDarkMode ? "text-gray-300" : "text-gray-500"
-              }`}
+              className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-500"
+                }`}
             >
               {saveStatus}
             </span>
@@ -365,21 +433,18 @@ const DocumentTemplate = () => {
       {showAIModal && (
         <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50">
           <div
-            className={`border rounded-lg border-indigo-400 p-6 w-full max-w-md shadow-lg ${
-              isDarkMode ? "bg-gray-800 text-white" : "bg-white text-black"
-            }`}
+            className={`border rounded-lg border-indigo-400 p-6 w-full max-w-md shadow-lg ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+              }`}
           >
             <h3
-              className={`text-lg font-semibold mb-2 ${
-                isDarkMode ? "text-indigo-300" : "text-indigo-700"
-              }`}
+              className={`text-lg font-semibold mb-2 ${isDarkMode ? "text-indigo-300" : "text-indigo-700"
+                }`}
             >
               AI Document Generator
             </h3>
             <p
-              className={`mb-3 text-sm ${
-                isDarkMode ? "text-gray-300" : "text-gray-600"
-              }`}
+              className={`mb-3 text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                }`}
             >
               Describe what you want:
             </p>
@@ -387,20 +452,18 @@ const DocumentTemplate = () => {
               ref={aiInputRef}
               type="text"
               placeholder="e.g., Generate an NDA for a startup"
-              className={`w-full border px-3 py-2 rounded mb-4 ${
-                isDarkMode
-                  ? "bg-gray-700 text-white border-gray-500"
-                  : "bg-white text-black border-gray-300"
-              }`}
+              className={`w-full border px-3 py-2 rounded mb-4 ${isDarkMode
+                ? "bg-gray-700 text-white border-gray-500"
+                : "bg-white text-black border-gray-300"
+                }`}
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowAIModal(false)}
-                className={`px-4 py-2 rounded ${
-                  isDarkMode
-                    ? "bg-gray-700 text-white hover:bg-gray-600"
-                    : "bg-gray-200 hover:bg-gray-300"
-                }`}
+                className={`px-4 py-2 rounded ${isDarkMode
+                  ? "bg-gray-700 text-white hover:bg-gray-600"
+                  : "bg-gray-200 hover:bg-gray-300"
+                  }`}
               >
                 Cancel
               </button>
@@ -420,9 +483,8 @@ const DocumentTemplate = () => {
           style={{ backdropFilter: "blur(2px)" }}
         >
           <div
-            className={`p-6 rounded-lg shadow-xl w-96 transition-all duration-300 ${
-              isDarkMode ? "bg-gray-800 text-white" : "bg-white text-black"
-            }`}
+            className={`p-6 rounded-lg shadow-xl w-96 transition-all duration-300 ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+              }`}
           >
             <h3 className="text-lg font-bold mb-4 text-center">
               Upload Your Template
@@ -463,11 +525,10 @@ const DocumentTemplate = () => {
             />
             <button
               onClick={() => document.getElementById("image-upload").click()}
-              className={`w-full mb-3 py-2 rounded ${
-                isDarkMode
-                  ? "bg-indigo-700 hover:bg-indigo-600"
-                  : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-              }`}
+              className={`w-full mb-3 py-2 rounded ${isDarkMode
+                ? "bg-indigo-700 hover:bg-indigo-600"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                }`}
             >
               📸 Upload Image
             </button>
@@ -499,11 +560,10 @@ const DocumentTemplate = () => {
 
             <button
               onClick={() => document.getElementById("text-upload").click()}
-              className={`w-full mb-3 py-2 rounded ${
-                isDarkMode
-                  ? "bg-indigo-700 hover:bg-indigo-600"
-                  : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-              }`}
+              className={`w-full mb-3 py-2 rounded ${isDarkMode
+                ? "bg-indigo-700 hover:bg-indigo-600"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                }`}
             >
               📄 Upload Text File
             </button>
@@ -548,11 +608,10 @@ const DocumentTemplate = () => {
 
             <button
               onClick={() => document.getElementById("pdf-upload").click()}
-              className={`w-full mb-3 py-2 rounded ${
-                isDarkMode
-                  ? "bg-indigo-700 hover:bg-indigo-600"
-                  : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-              }`}
+              className={`w-full mb-3 py-2 rounded ${isDarkMode
+                ? "bg-indigo-700 hover:bg-indigo-600"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+                }`}
             >
               📄 Upload PDF File
             </button>
@@ -560,11 +619,10 @@ const DocumentTemplate = () => {
             {/* Cancel Button */}
             <button
               onClick={() => setShowUploadModal(false)}
-              className={`w-full py-2 rounded ${
-                isDarkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-gray-200 hover:bg-gray-300"
-              }`}
+              className={`w-full py-2 rounded ${isDarkMode
+                ? "bg-gray-700 hover:bg-gray-600"
+                : "bg-gray-200 hover:bg-gray-300"
+                }`}
             >
               ❌ Cancel
             </button>

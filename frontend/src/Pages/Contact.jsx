@@ -265,9 +265,9 @@ export default function Contact() {
             <h4 className="text-xl font-semibold">Connect With Us <span className="pulse">🚀</span></h4>
             <p className="text-indigo-100 text-sm">Let’s grow together and innovate legal tech.</p>
             <div className="flex space-x-6 text-2xl">
-              <a href="#" className="hover:scale-125 hover:text-white hover:drop-shadow-[0_0_8px_white] transition duration-300">
+              <Link to="https://github.com/ojasvsingh71/LawSetu" className="hover:scale-125 hover:text-white hover:drop-shadow-[0_0_8px_white] transition duration-300">
                 <Github className="w-6 h-6" />
-              </a>
+              </Link>
               <a href="#" className="hover:scale-125 hover:text-white hover:drop-shadow-[0_0_8px_white] transition duration-300">
                 <Linkedin className="w-6 h-6" />
               </a>

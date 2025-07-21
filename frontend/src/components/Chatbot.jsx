@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../api/axios";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
@@ -65,9 +68,8 @@ const Chatbot = () => {
 
       {open && (
         <div
-          className={`fixed bottom-5 right-5 w-80 ${
-            minimized ? "h-16" : "h-[70vh]"
-          } bg-gray-200 rounded-lg shadow-2xl flex flex-col overflow-hidden transition-all duration-300 z-50`}
+          className={`fixed bottom-5 right-5 w-80 ${minimized ? "h-16" : "h-[70vh]"
+            } bg-gray-200 rounded-lg shadow-2xl flex flex-col overflow-hidden transition-all duration-300 z-50`}
         >
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 flex justify-between items-center text-sm">
             <span className="font-semibold">LawBot - AI Assistant</span>
@@ -93,9 +95,8 @@ const Chatbot = () => {
                 {messages.map((msg, i) => (
                   <div
                     key={i}
-                    className={`flex ${
-                      msg.role === "user" ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"
+                      }`}
                   >
                     {msg.role === "assistant" && (
                       <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold mr-2 shrink-0">
@@ -103,13 +104,16 @@ const Chatbot = () => {
                       </div>
                     )}
                     <div
-                      className={`px-4 py-3 rounded-lg text-sm max-w-[70%] break-words ${
-                        msg.role === "user"
-                          ? "bg-indigo-500 text-white rounded-br-none"
-                          : "bg-gray-700 text-gray-100 rounded-bl-none"
-                      }`}
+                      className={`px-4 py-3 rounded-lg text-sm max-w-[70%] break-words ${msg.role === "user"
+                        ? "bg-indigo-500 text-white rounded-br-none"
+                        : "bg-gray-700 text-gray-100 rounded-bl-none"
+                        }`}
                     >
-                      {msg.content || msg.text}
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                          {msg.content || msg.text}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                     {msg.role === "user" && (
                       <div className="w-8 h-8 rounded-full bg-gray-600 text-white flex items-center justify-center text-xs font-bold ml-2 shrink-0">
