@@ -3,35 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-// import api from "../api/axios";
+import api from "../api/axios";
 
-// console.log(api)
+const baseurl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      // const response = await api.post(`/auth/login`, {
-      //   email,
-      //   password,
-      //   remember
-      // }, { withCredentials: true }
-      // )
+      const response = await api.post(`/auth/login`, {
+        email,
+        password,
+        remember
+      }, { withCredentials: true }
+      )
 
-      // localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
 
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
       navigate("/", { replace: true });
     } catch (error) {
       alert(error.response?.data?.message || "Login failed!!! Please try again!!!");
+    } finally {
+      setLoading(false);
     }
 
 
@@ -100,9 +104,9 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition"
+              className={`w-full py-3  ${loading ? "bg-indigo-400" : "bg-indigo-600"} text-white font-semibold rounded-md hover:bg-indigo-700 transition`}
             >
-              Sign In
+              {loading ? " Signing In..." : "Sign In"}
             </button>
 
             <div className="text-center text-gray-500 font-semibold">OR</div>
@@ -110,10 +114,11 @@ const Login = () => {
 
           <button
             type="button"
+            onClick={() => window.location.href = `${baseurl}/auth/google`}
             className="w-full mt-4 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-            🚀 Continue with Google
+             Continue with Google
           </button>
 
           <p className="text-sm text-center mt-6 text-gray-600">
