@@ -1,4 +1,4 @@
-import { OpenAI } from 'openai'
+import OpenAI from 'openai'
 import dotenv from 'dotenv'
 import promptTemplate from './prompts/promptTemplate.js';
 import chatTemplate from './prompts/chatTemplate.js';
@@ -7,17 +7,30 @@ import chatModel from "../models/aichat.model.js"
 
 dotenv.config();
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPENROUTER_API_KEY,
+    defaultHeaders: {
+        "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
+        "X-Title": process.env.OPENROUTER_APP_NAME || "LawSetu"
+    }
+})
 
 const suggestionClause = async (req, res) => {
 
     try {
         const { context } = req.body;
 
+        if (!process.env.OPENROUTER_API_KEY) {
+            return res.status(500).json({
+                error: "Missing API key"
+            });
+        }
+
         await documentModel.create({ prompt: context });
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
+            model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
             messages: [
                 { role: 'system', content: promptTemplate },
                 { role: 'user', content: context },
@@ -38,10 +51,16 @@ const chat = async (req, res) => {
 
     const { messages } = req.body;
 
+    if (!process.env.OPENROUTER_API_KEY) {
+        return res.status(500).json({
+            error: "Missing API key"
+        });
+    }
+
     await chatModel.create({ prompt: messages.map(m => m.content).join("\n") });
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
+            model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
             messages: [
                 { role: "system", content: chatTemplate },
                 ...messages
